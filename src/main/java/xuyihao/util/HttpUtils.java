@@ -277,8 +277,8 @@ public class HttpUtils {
 		httpPost.setConfig(RequestConfig.custom().setSocketTimeout(timeout).setConnectTimeout(timeout).build());
 		httpPost.setHeader("Cookie", convertCookieMapToString(cookieMap));
 		List<NameValuePair> paramsRe = new ArrayList<>();
-		for (String key : params.keySet()) {
-			paramsRe.add(new BasicNameValuePair(key, params.get(key)));
+		for (Map.Entry<String, String> entry : params.entrySet()) {
+			paramsRe.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
 		}
 		CloseableHttpClient httpclient = HttpClientBuilder.create().build();
 		CloseableHttpResponse response;
@@ -321,8 +321,8 @@ public class HttpUtils {
 		String re = "";
 		HttpPost post = new HttpPost(url);
 		List<NameValuePair> paramsRe = new ArrayList<>();
-		for (String key : params.keySet()) {
-			paramsRe.add(new BasicNameValuePair(key, params.get(key)));
+		for (Map.Entry<String, String> entry : params.entrySet()) {
+			paramsRe.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
 		}
 		post.setHeader("Cookie", convertCookieMapToString(cookieMap));
 		post.setConfig(RequestConfig.custom().setSocketTimeout(timeout).setConnectTimeout(timeout).build());
@@ -460,8 +460,8 @@ public class HttpUtils {
 
 	private String convertCookieMapToString(Map<String, String> map) {
 		String cookie = "";
-		for (String key : map.keySet()) {
-			cookie += (key + "=" + map.get(key) + "; ");
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			cookie += (entry.getKey() + "=" + entry.getValue() + "; ");
 		}
 		if (map.size() > 0) {
 			cookie = cookie.substring(0, cookie.length() - 2);
