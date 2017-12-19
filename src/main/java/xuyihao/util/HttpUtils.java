@@ -126,7 +126,7 @@ public class HttpUtils {
 
 	/**
 	 * 将网页返回为解析后的文档格式
-	 * 
+	 *
 	 * @param html
 	 * @return
 	 * @throws Exception
@@ -428,16 +428,23 @@ public class HttpUtils {
 		HtmlPage page;
 		try {
 			page = webClient.getPage(url);
+			webClient.waitForBackgroundJavaScript(waitForBackgroundJavaScript);//该方法阻塞线程
+			result = page.asXml();
+			closeWebClient(webClient);
 		} catch (Exception e) {
-			webClient.close();
+			closeWebClient(webClient);
 			throw e;
 		}
-		webClient.waitForBackgroundJavaScript(waitForBackgroundJavaScript);//该方法阻塞线程
-
-		result = page.asXml();
-		webClient.close();
-
 		return result;
+	}
+
+	private static void closeWebClient(WebClient webClient) throws Exception {
+		webClient.getWebWindows().forEach(webWindow -> {
+			webWindow.getJobManager().removeAllJobs();
+			webWindow.getJobManager().shutdown();
+		});
+		webClient.close();
+		System.gc();//跑一下垃圾清理
 	}
 
 	/**
